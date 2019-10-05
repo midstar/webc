@@ -34,6 +34,8 @@ To build from source on any platform you need to:
 * Install Golang 
 * Set the GOPATH environment variable
 
+Then run:
+
     go get github.com/midstar/webc
     go install github.com/midstar/webc
 

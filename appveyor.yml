@@ -31,6 +31,7 @@ build_script:
 
   ############################################################################
   # Linux PC/x64 build and zip
+  - sh: export DATETIME=`date`
   - sh: go build -ldflags="-X 'main.applicationBuildTime=$DATETIME' -X main.applicationVersion=$APPVEYOR_BUILD_VERSION -X main.applicationGitHash=$APPVEYOR_REPO_COMMIT" github.com/midstar/webc
   - sh: tar -zcvf webc_linux_x64.tar.gz  webc
 

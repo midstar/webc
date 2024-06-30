@@ -30,13 +30,7 @@ jobs:
     - name: Linux PC/x64 build and zip
       run: |
         go build -v -ldflags="-X 'main.applicationBuildTime=$NOW' -X main.applicationVersion=$VERSION -X main.applicationGitHash=$GITHUB_SHA" ./...
-
-    - name: Upload Linux PC/x64 zip
-      #if: github.ref == 'refs/heads/master'
-      uses: actions/upload-artifact@v3
-      with:
-        name: webc_linux_x64_${{env.VERSION}}.zip
-        path: webc
+        tar -zcvf webc_linux_x64.tar.gz  webc
 
     - name: Linux ARM (cross compile from linux x64)
       run: |
@@ -45,10 +39,18 @@ jobs:
         export GOARCH=arm
         export GOARM=5
         go build -v -ldflags="-X 'main.applicationBuildTime=$NOW' -X main.applicationVersion=$VERSION -X main.applicationGitHash=$GITHUB_SHA" ./...
+        tar -zcvf webc_linux_arm.tar.gz  webc
+
+    - name: Upload Linux PC/x64 zip
+      #if: github.ref == 'refs/heads/master'
+      uses: actions/upload-artifact@v3
+      with:
+        name: webc_linux_x64_${{env.VERSION}}
+        path: webc_linux_x64.tar.gz 
 
     - name: Upload Linux ARM zip
       #if: github.ref == 'refs/heads/master'
       uses: actions/upload-artifact@v3
       with:
-        name: webc_linux_arm_${{env.VERSION}}.zip
-        path: webc
+        name: webc_linux_arm_${{env.VERSION}}
+        path: webc_linux_arm.tar.gz

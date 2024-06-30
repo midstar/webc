@@ -1,0 +1,67 @@
+name: webc builder 
+
+on: [push, pull_request]
+
+env:
+  VERSION: 1.1.0.${{github.run_number}}
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.22'
+
+    - name: Set current date as env variable
+      run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+
+    - name: Check Environment
+      run: |
+        ls
+        echo $NOW
+        echo $VERSION
+        echo $GITHUB_SHA
+
+    - name: Linux PC/x64 build and zip
+      run: |
+        go build -v -ldflags="-X 'main.applicationBuildTime=$NOW' -X main.applicationVersion=$VERSION -X main.applicationGitHash=$GITHUB_SHA" ./...
+        tar -zcvf webc_linux_x64.tar.gz  webc
+
+    - name: Linux ARM (cross compile from linux x64)
+      run: |
+        rm webc
+        export GOOS=linux 
+        export GOARCH=arm
+        export GOARM=5
+        go build -v -ldflags="-X 'main.applicationBuildTime=$NOW' -X main.applicationVersion=$VERSION -X main.applicationGitHash=$GITHUB_SHA" ./...
+        tar -zcvf webc_linux_arm.tar.gz  webc
+
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        name: webc-v${{env.VERSION}}
+        files: |
+          webc_linux_x64.tar.gz
+          webc_linux_arm.tar.gz
+
+    # Following steps will upload artifacts to Github Actions page
+
+    #- name: Upload Linux PC/x64 zip
+    #  #if: github.ref == 'refs/heads/master'
+    #  uses: actions/upload-artifact@v3
+    #  with:
+    #    name: webc_linux_x64_${{env.VERSION}}
+    #    path: webc_linux_x64.tar.gz 
+
+    #- name: Upload Linux ARM zip
+    #  #if: github.ref == 'refs/heads/master'
+    #  uses: actions/upload-artifact@v3
+    #  with:
+    #    name: webc_linux_arm_${{env.VERSION}}
+    #    path: webc_linux_arm.tar.gz

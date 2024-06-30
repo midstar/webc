@@ -1,6 +1,5 @@
 # webc - One file command line WEB server
-
-[![AppVeyor](https://ci.appveyor.com/api/projects/status/github/midstar/webc?svg=true)](https://ci.appveyor.com/api/projects/status/github/midstar/webc)
+![webc builder](https://github.com/midstar/webc/actions/workflows/build.yml/badge.svg)
 
 webc is a mini command line WEB server. It consists of one executable 
 and no external dependencies.

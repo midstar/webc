@@ -52,6 +52,7 @@ jobs:
       if: github.ref == 'refs/heads/master'
       with:
         name: webc-v${{env.VERSION}}
+        tag_name: webc-v${{env.VERSION}}
         files: |
           webc_linux_x64.tar.gz
           webc_linux_arm.tar.gz

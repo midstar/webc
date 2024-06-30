@@ -41,6 +41,12 @@ jobs:
         go build -v -ldflags="-X 'main.applicationBuildTime=$NOW' -X main.applicationVersion=$VERSION -X main.applicationGitHash=$GITHUB_SHA" ./...
         tar -zcvf webc_linux_arm.tar.gz  webc
 
+    - name: Create Tag
+      uses: rickstaa/action-create-tag@v1.7.2
+      if: github.ref == 'refs/heads/master'
+      with:
+        tag: webc-v${{env.VERSION}}
+
     - name: Release
       uses: softprops/action-gh-release@v2
       if: github.ref == 'refs/heads/master'
@@ -50,11 +56,6 @@ jobs:
           webc_linux_x64.tar.gz
           webc_linux_arm.tar.gz
 
-    - name: Create Tag
-      uses: rickstaa/action-create-tag@v1.7.2
-      if: github.ref == 'refs/heads/master'
-      with:
-        tag: webc-v${{env.VERSION}}
     # Following steps will upload artifacts to Github Actions page
 
     #- name: Upload Linux PC/x64 zip

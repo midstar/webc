@@ -17,7 +17,7 @@ import (
 var applicationVersion = "<NOT SET>"
 var applicationBuildTime = "<NOT SET>"
 var applicationGitHash = "<NOT SET>"
-error
+
 func printUsage() {
 	fmt.Printf("Usage: %s [options] [<path>]\n\n", os.Args[0])
 	fmt.Printf("<path> is the directory where your web files are located.\n")

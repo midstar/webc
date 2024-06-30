@@ -43,13 +43,18 @@ jobs:
 
     - name: Release
       uses: softprops/action-gh-release@v2
-      if: startsWith(github.ref, 'refs/tags/')
+      if: github.ref == 'refs/heads/master'
       with:
         name: webc-v${{env.VERSION}}
         files: |
           webc_linux_x64.tar.gz
           webc_linux_arm.tar.gz
 
+    - name: Create Tag
+      uses: rickstaa/action-create-tag@v1.7.2
+      if: github.ref == 'refs/heads/master'
+      with:
+        tag: webc-v${{env.VERSION}}
     # Following steps will upload artifacts to Github Actions page
 
     #- name: Upload Linux PC/x64 zip

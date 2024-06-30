@@ -17,12 +17,18 @@ jobs:
       with:
         go-version: '1.22'
 
+    - name: Set current date as env variable
+      run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+
     - name: Check Environment
       run: |
         ls
-        echo $DATETIME
+        echo $NOW
         echo $VERSION
         echo $GITHUB_SHA
 
     - name: Build
-      run: go build -v -ldflags="-X 'main.applicationBuildTime=$DATETIME' -X main.applicationVersion=$VERSION -X main.applicationGitHash=$GITHUB_SHA" ./...
+      run: go build -v -ldflags="-X 'main.applicationBuildTime=$NOW -X main.applicationVersion=$VERSION -X main.applicationGitHash=$GITHUB_SHA" ./...
+
+    - name: Test
+      run: ./webc -v

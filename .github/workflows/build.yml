@@ -28,7 +28,7 @@ jobs:
         echo $GITHUB_SHA
 
     - name: Build
-      run: go build -v -ldflags="-X 'main.applicationBuildTime=$NOW -X main.applicationVersion=$VERSION -X main.applicationGitHash=$GITHUB_SHA" ./...
+      run: go build -v -ldflags="-X 'main.applicationBuildTime=$NOW' -X main.applicationVersion=$VERSION -X main.applicationGitHash=$GITHUB_SHA" ./...
 
     - name: Test
       run: ./webc -v

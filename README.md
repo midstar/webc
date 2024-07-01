@@ -16,15 +16,25 @@ the software yourself according to the instructions below.
 Copy the webc to a directory of your choice and add it to your PATH
 environment variable.
 
-    Usage: webc.exe [options] [<path>]
-    
+    Usage: webc [options] [<path>]
+
     <path> is the directory where your web files are located.
     Default is current directory.
-    
+
     Supported options:
-      -p int
+    -c string
+            TLS certificate file (default "cert.pem")
+    -k string
+            TLS key file (default "key.pem")
+    -p int
             Network port to listen to (default 8080)
-      -v    Display version
+    -s	Use secure connection (TLS/HTTPS)
+    -v	Display version
+
+OpenSSL can be used to generate the public and private key required for TLS/HTTPS:
+
+    openssl genrsa -out key.pem 2048
+    openssl req -new -x509 -sha256 -key key.pem -out cert.pem -days 3650
 
 ## Build from source (any platform)
 

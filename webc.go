@@ -30,6 +30,9 @@ func main() {
 	flag.Usage = printUsage
 	var version = flag.Bool("v", false, "Display version")
 	var port = flag.Int("p", 8080, "Network port to listen to")
+	var tlsEnable = flag.Bool("s", false, "Use secure connection (TLS/HTTPS)")
+	var tlsCertFile = flag.String("c", "cert.pem", "TLS certificate file")
+	var tlsKeyFile = flag.String("k", "key.pem", "TLS key file")
 	flag.Parse()
 
 	if *version {
@@ -51,10 +54,19 @@ func main() {
 	fs := http.FileServer(http.Dir(directory))
 	http.Handle("/", fs)
 
-	fmt.Printf("Serving path %s on port %d\n", directory, *port)
+	if *tlsEnable {
+		fmt.Printf("Serving path %s on port %d over HTTPS\n", directory, *port)
 
-	err := http.ListenAndServe(":"+strconv.Itoa(*port), nil)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error! %s\n", err)
-	}
+		err := http.ListenAndServeTLS(":"+strconv.Itoa(*port), *tlsCertFile, *tlsKeyFile, nil)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error! %s\n", err)
+		}
+	} else {
+		fmt.Printf("Serving path %s on port %d over HTTP\n", directory, *port)
+
+		err := http.ListenAndServe(":"+strconv.Itoa(*port), nil)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error! %s\n", err)
+		}	
+	} 
 }
